@@ -18,8 +18,8 @@ app.UseHttpsRedirection();
 
 List<Property> properties = new List<Property>()
 {
-    new Property { Id = 1, Description = "Casa adosada", Rooms = 7 },
-    new Property { Id = 2, Description = "Piso mediano", Rooms = 4 }
+    new Property { Id = Guid.NewGuid(), Description = "Casa adosada", Rooms = 7 },
+    new Property { Id = Guid.NewGuid(), Description = "Piso mediano", Rooms = 4 }
 };
 
 // Endpoints
@@ -32,12 +32,12 @@ app.MapPost("/api/properties", (Property newProperty) =>
 {
     if (newProperty.Description == "" || newProperty.Rooms < 0) return Results.BadRequest("Todos los campos son obligatorios");
 
-    newProperty.Id = properties.Count() + 1;
+    newProperty.Id = Guid.NewGuid();
     properties.Add(newProperty);
     return Results.Created($"/api/properties/{newProperty.Id}", newProperty);
 });
 
-app.MapPut("/api/properties/{id}", (int id, PropertyDto updateProperty) =>
+app.MapPut("/api/properties/{id}", (Guid id, PropertyDto updateProperty) =>
 {
     var propertyToUpdate = properties.FirstOrDefault(p => p.Id == id);
 
@@ -49,7 +49,7 @@ app.MapPut("/api/properties/{id}", (int id, PropertyDto updateProperty) =>
     return Results.Ok($"Se ha modificado la propiedad: {updateProperty.Description}");
 });
 
-app.MapDelete("/api/properties/{id}", (int id) =>
+app.MapDelete("/api/properties/{id}", (Guid id) =>
 {
     var propertyToDelete = properties.FirstOrDefault(p => p.Id == id);
 
@@ -64,7 +64,7 @@ app.Run();
 
 class Property
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Description { get; set; } = string.Empty;
     public int Rooms { get; set; }
 }
