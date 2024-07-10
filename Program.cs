@@ -16,4 +16,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Endpoints
+app.MapGet("/api/saludo", () => "Bienvenido a la API");
+app.MapPost("/api/saludo", () => "Post");
+
 app.Run();
