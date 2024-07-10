@@ -37,13 +37,40 @@ app.MapPost("/api/properties", (Property newProperty) =>
     return Results.Created($"/api/properties/{newProperty.Id}", newProperty);
 });
 
+app.MapPut("/api/properties/{id}", (int id, PropertyDto updateProperty) =>
+{
+    var propertyToUpdate = properties.FirstOrDefault(p => p.Id == id);
+
+    if (propertyToUpdate == null) return Results.BadRequest("No se encuentra la propiedad");
+
+    propertyToUpdate.Description = updateProperty.Description;
+    propertyToUpdate.Rooms = updateProperty.Rooms;
+
+    return Results.Ok($"Se ha modificado la propiedad: {updateProperty.Description}");
+});
+
+app.MapDelete("/api/properties/{id}", (int id) =>
+{
+    var propertyToDelete = properties.FirstOrDefault(p => p.Id == id);
+
+    if (propertyToDelete == null) return Results.BadRequest("No se encuentra la propiedad");
+
+    properties.Remove(propertyToDelete);
+
+    return Results.Ok($"Se ha eliminado la propiedad: {propertyToDelete.Description}");
+});
+
 app.Run();
 
 class Property
 {
     public int Id { get; set; }
-
     public string Description { get; set; } = string.Empty;
+    public int Rooms { get; set; }
+}
 
+class PropertyDto
+{
+    public string Description { get; set; } = string.Empty;
     public int Rooms { get; set; }
 }
