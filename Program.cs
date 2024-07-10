@@ -16,8 +16,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+List<Property> properties = new List<Property>()
+{
+    new Property { Id = 1, Description = "Casa adosada", Rooms = 7 },
+    new Property { Id = 2, Description = "Piso mediano", Rooms = 4 }
+};
+
 // Endpoints
-app.MapGet("/api/saludo", () => "Bienvenido a la API");
-app.MapPost("/api/saludo", () => "Post");
+app.MapGet("/api/properties", () =>
+{
+    return properties;
+});
 
 app.Run();
+
+class Property
+{
+    public int Id { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public int Rooms { get; set; }
+}
