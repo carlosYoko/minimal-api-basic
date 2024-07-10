@@ -28,11 +28,22 @@ app.MapGet("/api/properties", () =>
     return properties;
 });
 
+app.MapPost("/api/properties", (Property newProperty) =>
+{
+    if (newProperty.Description == "" || newProperty.Rooms < 0) return Results.BadRequest("Todos los campos son obligatorios");
+
+    newProperty.Id = properties.Count() + 1;
+    properties.Add(newProperty);
+    return Results.Created($"/api/properties/{newProperty.Id}", newProperty);
+});
+
 app.Run();
 
 class Property
 {
     public int Id { get; set; }
+
     public string Description { get; set; } = string.Empty;
+
     public int Rooms { get; set; }
 }
